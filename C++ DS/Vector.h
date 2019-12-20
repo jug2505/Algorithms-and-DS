@@ -2,6 +2,7 @@
 #define NOSTD_VECTOR_IMPL
 
 #include <cstddef>
+#include <stdexcept>
 
 namespace NoSTD{
   using std::size_t;
@@ -19,12 +20,17 @@ namespace NoSTD{
       // Copy assignment
       Vector<T>& operator=(const Vector<T>&);
       // Destructor
-      ~Vector() {delete[] data};
+      ~Vector() {delete[] data;};
       // Iterators
-      iterator begin(){return data};
-      const iterator begin() const {return data};
-      iterator end(){return data + size};
-      const iterator end() const {return data + size};
+      iterator begin(){return data;};
+      const iterator begin() const {return data;};
+      iterator end(){return data + size;};
+      const iterator end() const {return data + size;};
+      // Capacity and size //
+      bool empty() const {return size;};
+      size_t capacity () const {return capacity;};
+      // Change capacity, will never decrease it
+      void reserve(size_t newalloc);
     
     private:
       // Pointer to the first element of data array
@@ -70,6 +76,11 @@ NoSTD::Vector<T>::Vector<T>& operator=(const Vector<T>& arg){
   for(size_t i = 0; i < arg.size; ++i)
       data[i] = arg.data[i];
   return *this;
+}
+
+template<class T>
+NoSTD::Vector<T>::void reserve(size_t newalloc){
+  if(newalloc < capacity) return std::invalid_argument("Capacity > argument");
 }
 
 #endif
